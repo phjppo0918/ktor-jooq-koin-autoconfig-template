@@ -1,4 +1,5 @@
 
+import nu.studer.gradle.jooq.JooqGenerate
 import org.jooq.meta.kotlin.database
 import org.jooq.meta.kotlin.forcedType
 import org.jooq.meta.kotlin.forcedTypes
@@ -155,4 +156,15 @@ jooq {
             }
         }
     }
+}
+
+tasks.named<JooqGenerate>("generateJooq").configure {
+    dependsOn(tasks.named("flywayMigrate"))
+
+    inputs
+        .files(fileTree("src/main/resources/db/migration"))
+        .withPropertyName("migrations")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+
+    allInputsDeclared.set(true)
 }
