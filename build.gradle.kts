@@ -51,6 +51,15 @@ configurations {
     create("flywayMigration")
 }
 
+kotlin {
+    sourceSets.main {
+        kotlin.srcDir("build/generated/ksp/main/kotlin")
+    }
+    sourceSets.test {
+        kotlin.srcDir("build/generated/ksp/test/kotlin")
+    }
+}
+
 buildscript {
     dependencies {
         classpath("com.mysql:mysql-connector-j:9.3.0")
@@ -99,7 +108,6 @@ dependencies {
     testImplementation("io.mockk:mockk:$mockkVersion")
 }
 
-// https://github.com/etiennestuder/gradle-jooq-plugin/blob/main/example/configure_jooq_with_flyway/build.gradle
 val envFile = file(".env")
 if (envFile.exists()) {
     val props = Properties()
