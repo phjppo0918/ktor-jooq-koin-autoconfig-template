@@ -1,10 +1,10 @@
 package com.example
 
 import io.ktor.server.application.Application
+import io.ktor.server.tomcat.jakarta.EngineMain
 
 fun main(args: Array<String>) {
-    io.ktor.server.tomcat.jakarta.EngineMain
-        .main(args)
+    EngineMain.main(args)
 }
 
 fun Application.module() {

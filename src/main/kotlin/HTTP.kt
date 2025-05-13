@@ -1,12 +1,10 @@
 package com.example
 
-import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpMethod
-import io.ktor.server.application.Application
-import io.ktor.server.application.install
-import io.ktor.server.plugins.cors.routing.CORS
-import io.ktor.server.plugins.swagger.swaggerUI
-import io.ktor.server.routing.routing
+import io.ktor.http.*
+import io.ktor.server.application.*
+import io.ktor.server.plugins.cors.routing.*
+import io.ktor.server.plugins.swagger.*
+import io.ktor.server.routing.*
 
 fun Application.configureHTTP() {
     install(CORS) {
@@ -19,6 +17,6 @@ fun Application.configureHTTP() {
         anyHost() // @TODO: Don't do this in production if possible. Try to limit it.
     }
     routing {
-        swaggerUI(path = "openapi")
+        swaggerUI(path = "api-docs")
     }
 }
