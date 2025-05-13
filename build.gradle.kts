@@ -8,6 +8,8 @@ val logbackVersion: String by project
 val jooqVersion: String by project
 val mysqlVersion: String by project
 val hikariCPVersion: String by project
+val kotestVersion: String by project
+val mockkVersion: String by project
 
 plugins {
     kotlin("jvm") version "2.1.10"
@@ -78,8 +80,12 @@ dependencies {
     // etc
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
 
+    // test
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
     testImplementation("io.ktor:ktor-server-test-host")
+    testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
+    testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
+    testImplementation("io.mockk:mockk:$mockkVersion")
 }
 
 // https://github.com/etiennestuder/gradle-jooq-plugin/blob/main/example/configure_jooq_with_flyway/build.gradle
