@@ -1,8 +1,16 @@
-
-import org.jooq.meta.kotlin.*
-import java.util.*
+import org.jooq.meta.kotlin.database
+import org.jooq.meta.kotlin.forcedType
+import org.jooq.meta.kotlin.forcedTypes
+import org.jooq.meta.kotlin.generate
+import org.jooq.meta.kotlin.generator
+import org.jooq.meta.kotlin.jdbc
+import org.jooq.meta.kotlin.schema
+import org.jooq.meta.kotlin.schemata
+import org.jooq.meta.kotlin.target
+import java.util.Properties
 
 val koinVersion: String by project
+val koinAnnotationVersion: String by project
 val kotlinVersion: String by project
 val logbackVersion: String by project
 val jooqVersion: String by project
@@ -14,9 +22,10 @@ val mockkVersion: String by project
 plugins {
     kotlin("jvm") version "2.1.10"
     id("io.ktor.plugin") version "3.1.3"
-    id("org.jetbrains.kotlin.plugin.serialization") version "2.1.10"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.1.20"
     id("nu.studer.jooq") version "10.1"
     id("org.flywaydb.flyway") version "11.8.1"
+    id("com.google.devtools.ksp") version "2.1.20-2.0.1"
 }
 
 group = "com.example"
@@ -66,6 +75,8 @@ dependencies {
 
     // koin
     implementation("io.insert-koin:koin-ktor:$koinVersion")
+    implementation("io.insert-koin:koin-annotations:$koinAnnotationVersion")
+    ksp("io.insert-koin:koin-ksp-compiler:$koinAnnotationVersion")
     implementation("io.insert-koin:koin-logger-slf4j:$koinVersion")
 
     // db
