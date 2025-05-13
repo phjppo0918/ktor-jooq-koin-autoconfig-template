@@ -1,14 +1,6 @@
 
-import nu.studer.gradle.jooq.JooqGenerate
-import org.jooq.meta.kotlin.database
-import org.jooq.meta.kotlin.forcedType
-import org.jooq.meta.kotlin.forcedTypes
-import org.jooq.meta.kotlin.generate
-import org.jooq.meta.kotlin.generator
-import org.jooq.meta.kotlin.jdbc
-import org.jooq.meta.kotlin.schema
-import org.jooq.meta.kotlin.schemata
-import org.jooq.meta.kotlin.target
+import org.jooq.meta.kotlin.*
+import java.util.*
 
 val koinVersion: String by project
 val kotlinVersion: String by project
@@ -48,6 +40,13 @@ configurations {
     create("flywayMigration")
 }
 
+buildscript {
+    dependencies {
+        classpath("com.mysql:mysql-connector-j:9.3.0")
+        classpath("org.flywaydb:flyway-mysql:11.8.1")
+    }
+}
+
 dependencies {
     // ktor
     implementation("io.ktor:ktor-server-core")
@@ -70,7 +69,6 @@ dependencies {
     // db
     implementation("com.mysql:mysql-connector-j:$mysqlVersion")
     implementation("com.zaxxer:HikariCP:$hikariCPVersion")
-    add("flywayMigration", "com.mysql:mysql-connector-j:$mysqlVersion")
 
     // jooq
     implementation("org.jooq:jooq:$jooqVersion")
@@ -85,11 +83,19 @@ dependencies {
 }
 
 // https://github.com/etiennestuder/gradle-jooq-plugin/blob/main/example/configure_jooq_with_flyway/build.gradle
+val envFile = file(".env")
+if (envFile.exists()) {
+    val props = Properties()
+    envFile.reader().use { props.load(it) }
+    props.forEach { key, value ->
+        project.extensions.extraProperties[key.toString()] = value
+    }
+}
 
-val dbUrl = project.findProperty("db.url").toString()
-val dbUser = project.findProperty("db.user").toString()
-val dbPassword = project.findProperty("db.password").toString()
-val dbSchema = project.findProperty("db.schema").toString()
+val dbUrl = project.findProperty("DB_URL").toString()
+val dbUser = project.findProperty("DB_USER").toString()
+val dbPassword = project.findProperty("DB_PASSWORD").toString()
+val dbSchema = project.findProperty("DB_SCHEMA").toString()
 
 flyway {
     configurations = arrayOf("flywayMigration")
@@ -112,7 +118,7 @@ jooq {
                     password = flyway.password
                 }
                 generator {
-                    name = "org.jooq.meta.mysql.MySQLDatabase"
+                    name = "org.jooq.codegen.DefaultGenerator"
                     strategy.name = "jooq.configuration.generator.JPrefixGeneratorStrategy"
                     database {
                         name = "org.jooq.meta.mysql.MySQLDatabase"
@@ -156,15 +162,4 @@ jooq {
             }
         }
     }
-}
-
-tasks.named<JooqGenerate>("generateJooq").configure {
-    dependsOn(tasks.named("flywayMigrate"))
-
-    inputs
-        .files(fileTree("src/main/resources/db/migration"))
-        .withPropertyName("migrations")
-        .withPathSensitivity(PathSensitivity.RELATIVE)
-
-    allInputsDeclared.set(true)
 }
