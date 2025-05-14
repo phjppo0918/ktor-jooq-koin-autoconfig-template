@@ -20,12 +20,12 @@ val kotestVersion: String by project
 val mockkVersion: String by project
 
 plugins {
-    kotlin("jvm") version "2.1.10"
+    kotlin("jvm") version "2.1.20"
     id("io.ktor.plugin") version "3.1.3"
     id("org.jetbrains.kotlin.plugin.serialization") version "2.1.20"
     id("nu.studer.jooq") version "10.1"
     id("org.flywaydb.flyway") version "11.8.1"
-    id("com.google.devtools.ksp") version "2.1.20-2.0.1"
+    id("com.google.devtools.ksp") version "2.1.20-1.0.32"
 }
 
 group = "com.example"
@@ -42,22 +42,18 @@ repositories {
 sourceSets {
     main {
         kotlin {
-            srcDirs("src/main/kotlin", "src/generated")
+            srcDirs("src/main/kotlin", "src/generated", "build/generated/ksp/main/kotlin")
+        }
+    }
+    test {
+        kotlin {
+            srcDirs("src/main/kotlin", "src/generated", "build/generated/ksp/test/kotlin")
         }
     }
 }
 
 configurations {
     create("flywayMigration")
-}
-
-kotlin {
-    sourceSets.main {
-        kotlin.srcDir("build/generated/ksp/main/kotlin")
-    }
-    sourceSets.test {
-        kotlin.srcDir("build/generated/ksp/test/kotlin")
-    }
 }
 
 buildscript {
