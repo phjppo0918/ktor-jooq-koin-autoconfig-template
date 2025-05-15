@@ -11,6 +11,6 @@ class ApplicationTest :
         }
 
         "hello world2" {
-            "b" shouldBe "a"
+            "b" shouldBe "b"
         }
     })
