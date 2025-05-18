@@ -9,7 +9,7 @@ import org.koin.ktor.ext.inject
 fun Route.memberRouter() {
     val memberService by inject<MemberService>()
 
-    get("/") {
+    get("/member") {
         memberService.save(Member(1, "4"))
     }
 }
