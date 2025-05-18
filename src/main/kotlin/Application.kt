@@ -1,5 +1,6 @@
 package com.example
 
+import com.example.configuration.configureHTTP
 import com.example.configuration.configureKoin
 import com.example.configuration.configureRouting
 import io.ktor.server.application.Application
