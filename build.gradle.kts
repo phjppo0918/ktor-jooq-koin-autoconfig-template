@@ -38,17 +38,20 @@ application {
 repositories {
     mavenCentral()
     maven { url = uri("https://packages.confluent.io/maven/") }
-}
-sourceSets {
-    main {
-        kotlin {
-            srcDirs("src/main/kotlin", "src/generated", "build/generated/ksp/main/kotlin")
+
+    // TODO ktor 4.1.0 정식 출시 후 제거
+    maven("https://maven.pkg.jetbrains.space/public/p/ktor/eap") {
+        mavenContent {
+            includeGroupAndSubgroups("io.ktor")
         }
     }
-    test {
-        kotlin {
-            srcDirs("src/main/kotlin", "src/generated", "build/generated/ksp/test/kotlin")
-        }
+}
+kotlin {
+    sourceSets.main {
+        kotlin.srcDirs("src/main/kotlin", "src/generated", "build/generated/ksp/main/kotlin")
+    }
+    sourceSets.test {
+        kotlin.srcDirs("src/main/kotlin", "src/generated", "build/generated/ksp/test/kotlin")
     }
 }
 
@@ -83,6 +86,8 @@ dependencies {
     implementation("io.insert-koin:koin-annotations:$koinAnnotationVersion")
     ksp("io.insert-koin:koin-ksp-compiler:$koinAnnotationVersion")
     implementation("io.insert-koin:koin-logger-slf4j:$koinVersion")
+    testImplementation("io.insert-koin:koin-test:$koinVersion")
+    testImplementation("io.insert-koin:koin-test-junit5:$koinVersion")
 
     // db
     implementation("com.mysql:mysql-connector-j:$mysqlVersion")
@@ -188,4 +193,8 @@ jooq {
             }
         }
     }
+}
+
+ksp {
+    arg("KOIN_CONFIG_CHECK", "true")
 }
